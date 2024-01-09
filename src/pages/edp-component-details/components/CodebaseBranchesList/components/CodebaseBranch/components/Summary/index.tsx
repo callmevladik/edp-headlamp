@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { Chip, Grid, IconButton, Tooltip, Typography } from '@material-ui/core';
+import { Chip, Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -24,194 +24,182 @@ import { useStyles } from './styles';
 import { SummaryProps } from './types';
 
 export const Summary = ({ codebaseData, codebaseBranchData, pipelineRuns }: SummaryProps) => {
-    const { namespace } = useParams<EDPComponentDetailsRouteParams>();
-    const { data: EDPComponentsURLS } = useEDPComponentsURLsQuery(namespace);
+  const { namespace } = useParams<EDPComponentDetailsRouteParams>();
+  const { data: EDPComponentsURLS } = useEDPComponentsURLsQuery(namespace);
 
-    const sonarLink = React.useMemo(
-        () =>
-            LinkCreationService.sonar.createDashboardLink(
-                EDPComponentsURLS?.sonar,
-                codebaseBranchData.metadata.name
-            ),
-        [codebaseBranchData.metadata.name, EDPComponentsURLS]
+  const sonarLink = React.useMemo(
+    () =>
+      LinkCreationService.sonar.createDashboardLink(
+        EDPComponentsURLS?.sonar,
+        codebaseBranchData.metadata.name
+      ),
+    [codebaseBranchData.metadata.name, EDPComponentsURLS]
+  );
+
+  const buttonRef = React.createRef<HTMLButtonElement>();
+
+  const { handleOpenResourceActionListMenu } =
+    useResourceActionListContext<EDPCodebaseBranchKubeObjectInterface>();
+  const { createBuildPipelineRun } = useCreateBuildPipelineRun({});
+  const { data: storageSize } = useStorageSizeQuery(codebaseData);
+  const { data: gitServerByCodebase } = useGitServerByCodebaseQuery({
+    props: { codebaseGitServer: codebaseData?.spec.gitServer },
+  });
+
+  const classes = useStyles();
+  const status = codebaseBranchData?.status?.status;
+  const detailedMessage = codebaseBranchData?.status?.detailedMessage;
+
+  const [codebaseBranchIcon, codebaseBranchColor, codebaseBranchIsRotating] =
+    EDPCodebaseBranchKubeObject.getStatusIcon(status);
+
+  const [lastPipelineRunIcon, lastPipelineRunColor, lastPipelineRunIsRotating] =
+    PipelineRunKubeObject.getStatusIcon(
+      PipelineRunKubeObject.parseStatus(pipelineRuns.latestBuildPipelineRun),
+      PipelineRunKubeObject.parseStatusReason(pipelineRuns.latestBuildPipelineRun)
     );
 
-    const buttonRef = React.createRef<HTMLButtonElement>();
+  const onBuildButtonClick = React.useCallback(
+    async e => {
+      e.stopPropagation();
 
-    const { handleOpenResourceActionListMenu } =
-        useResourceActionListContext<EDPCodebaseBranchKubeObjectInterface>();
-    const { createBuildPipelineRun } = useCreateBuildPipelineRun({});
-    const { data: storageSize } = useStorageSizeQuery(codebaseData);
-    const { data: gitServerByCodebase } = useGitServerByCodebaseQuery({
-        props: { codebaseGitServer: codebaseData?.spec.gitServer },
-    });
+      if (!storageSize) {
+        throw new Error(`Trigger template's storage property has not been found`);
+      }
 
-    const classes = useStyles();
-    const status = codebaseBranchData?.status?.status;
-    const detailedMessage = codebaseBranchData?.status?.detailedMessage;
+      if (!gitServerByCodebase) {
+        throw new Error(`Codebase Git Server has not been found`);
+      }
 
-    const [codebaseBranchIcon, codebaseBranchColor, codebaseBranchIsRotating] =
-        EDPCodebaseBranchKubeObject.getStatusIcon(status);
-
-    const [lastPipelineRunIcon, lastPipelineRunColor, lastPipelineRunIsRotating] =
-        PipelineRunKubeObject.getStatusIcon(
-            PipelineRunKubeObject.parseStatus(pipelineRuns.latestBuildPipelineRun),
-            PipelineRunKubeObject.parseStatusReason(pipelineRuns.latestBuildPipelineRun)
-        );
-
-    const onBuildButtonClick = React.useCallback(
-        async e => {
-            e.stopPropagation();
-
-            if (!storageSize) {
-                throw new Error(`Trigger template's storage property has not been found`);
-            }
-
-            if (!gitServerByCodebase) {
-                throw new Error(`Codebase Git Server has not been found`);
-            }
-
-            await createBuildPipelineRun({
-                namespace: codebaseData.metadata.namespace,
-                codebaseBranchData: {
-                    codebaseBranchName: codebaseBranchData?.spec.branchName,
-                    codebaseBranchMetadataName: codebaseBranchData?.metadata.name,
-                },
-                codebaseData: {
-                    codebaseName: codebaseData.metadata.name,
-                    codebaseBuildTool: codebaseData.spec.buildTool,
-                    codebaseVersioningType: codebaseData.spec.versioning.type,
-                    codebaseType: codebaseData.spec.type,
-                    codebaseFramework: codebaseData.spec.framework,
-                    codebaseGitUrlPath: codebaseData.spec.gitUrlPath,
-                },
-                gitServerData: {
-                    gitUser: gitServerByCodebase.spec.gitUser,
-                    gitHost: gitServerByCodebase.spec.gitHost,
-                    gitProvider: gitServerByCodebase.spec.gitProvider,
-                    sshPort: gitServerByCodebase.spec.sshPort,
-                    nameSshKeySecret: gitServerByCodebase.spec.nameSshKeySecret,
-                },
-                storageSize: storageSize,
-            });
+      await createBuildPipelineRun({
+        namespace: codebaseData.metadata.namespace,
+        codebaseBranchData: {
+          codebaseBranchName: codebaseBranchData?.spec.branchName,
+          codebaseBranchMetadataName: codebaseBranchData?.metadata.name,
         },
-        [codebaseBranchData, codebaseData, createBuildPipelineRun, gitServerByCodebase, storageSize]
-    );
+        codebaseData: {
+          codebaseName: codebaseData.metadata.name,
+          codebaseBuildTool: codebaseData.spec.buildTool,
+          codebaseVersioningType: codebaseData.spec.versioning.type,
+          codebaseType: codebaseData.spec.type,
+          codebaseFramework: codebaseData.spec.framework,
+          codebaseGitUrlPath: codebaseData.spec.gitUrlPath,
+        },
+        gitServerData: {
+          gitUser: gitServerByCodebase.spec.gitUser,
+          gitHost: gitServerByCodebase.spec.gitHost,
+          gitProvider: gitServerByCodebase.spec.gitProvider,
+          sshPort: gitServerByCodebase.spec.sshPort,
+          nameSshKeySecret: gitServerByCodebase.spec.nameSshKeySecret,
+        },
+        storageSize: storageSize,
+      });
+    },
+    [codebaseBranchData, codebaseData, createBuildPipelineRun, gitServerByCodebase, storageSize]
+  );
 
-    return (
-        <div className={classes.branchHeader}>
-            <StatusIcon
-                icon={codebaseBranchIcon}
-                color={codebaseBranchColor}
-                isRotating={codebaseBranchIsRotating}
-                Title={
-                    <>
-                        <Typography variant={'subtitle2'} style={{ fontWeight: 600 }}>
-                            {`Status: ${status || 'Unknown'}`}
-                        </Typography>
-                        {status === CUSTOM_RESOURCE_STATUSES.FAILED && (
-                            <Typography variant={'subtitle2'} style={{ marginTop: rem(10) }}>
-                                {detailedMessage}
-                            </Typography>
-                        )}
-                    </>
-                }
-            />
-            <Typography variant={'h6'} style={{ lineHeight: 1, marginTop: rem(2) }}>
-                {codebaseBranchData.spec.branchName}
+  return (
+    <div className={classes.branchHeader}>
+      <StatusIcon
+        icon={codebaseBranchIcon}
+        color={codebaseBranchColor}
+        isRotating={codebaseBranchIsRotating}
+        Title={
+          <>
+            <Typography variant={'subtitle2'} style={{ fontWeight: 600 }}>
+              {`Status: ${status || 'Unknown'}`}
             </Typography>
-            {isDefaultBranch(codebaseData, codebaseBranchData) && (
-                <Chip
-                    label="default"
-                    className={clsx([classes.labelChip, classes.labelChipBlue])}
-                />
+            {status === CUSTOM_RESOURCE_STATUSES.FAILED && (
+              <Typography variant={'subtitle2'} style={{ marginTop: rem(10) }}>
+                {detailedMessage}
+              </Typography>
             )}
-            {codebaseBranchData.spec.release && (
-                <Chip
-                    label="release"
-                    className={clsx([classes.labelChip, classes.labelChipGreen])}
-                />
-            )}
-            <div style={{ marginLeft: 'auto' }}>
-                <Grid container spacing={1} alignItems={'center'}>
-                    <Grid item>
-                        <div className={classes.pipelineRunStatus}>
-                            <StatusIcon
-                                icon={lastPipelineRunIcon}
-                                color={lastPipelineRunColor}
-                                isRotating={lastPipelineRunIsRotating}
-                                width={18}
-                                Title={
-                                    <>
-                                        <Typography
-                                            variant={'subtitle2'}
-                                            style={{ fontWeight: 600 }}
-                                        >
-                                            {`Last Build PipelineRun status: ${PipelineRunKubeObject.parseStatus(
-                                                pipelineRuns.latestBuildPipelineRun
-                                            )}. Reason: ${PipelineRunKubeObject.parseStatusReason(
-                                                pipelineRuns.latestBuildPipelineRun
-                                            )}`}
-                                        </Typography>
-                                    </>
-                                }
-                            />
-                        </div>
-                    </Grid>
-                    {!!EDPComponentsURLS?.sonar && (
-                        <Grid item>
-                            <ResourceIconLink
-                                tooltipTitle={'Open the Quality Gates'}
-                                link={sonarLink}
-                                icon={ICONS.SONAR}
-                            />
-                        </Grid>
-                    )}
-                    {!!codebaseData?.status?.gitWebUrl && (
-                        <Grid item>
-                            <ResourceIconLink
-                                tooltipTitle={'Open the Source Code'}
-                                link={codebaseData?.status?.gitWebUrl}
-                                icon={ICONS.GIT_BRANCH}
-                            />
-                        </Grid>
-                    )}
-                    <Grid item>
-                        <Tooltip title={'Trigger build pipeline run'}>
-                            <IconButton
-                                onClick={onBuildButtonClick}
-                                disabled={
-                                    PipelineRunKubeObject.parseStatusReason(
-                                        pipelineRuns.latestBuildPipelineRun
-                                    ) === PIPELINE_RUN_REASON.RUNNING ||
-                                    codebaseBranchData?.status?.status !==
-                                        CUSTOM_RESOURCE_STATUSES.CREATED
-                                }
-                            >
-                                <Icon icon={ICONS.PLAY} />
-                            </IconButton>
-                        </Tooltip>
-                    </Grid>
-
-                    <Grid item>
-                        <Tooltip title={'Actions'}>
-                            <IconButton
-                                aria-label={'Actions'}
-                                ref={buttonRef}
-                                onClick={e => {
-                                    e.stopPropagation();
-                                    handleOpenResourceActionListMenu(
-                                        buttonRef.current,
-                                        codebaseBranchData
-                                    );
-                                }}
-                            >
-                                <Icon icon={ICONS.THREE_DOTS} color={'grey'} width="20" />
-                            </IconButton>
-                        </Tooltip>
-                    </Grid>
-                </Grid>
+          </>
+        }
+      />
+      <Typography variant={'h6'} style={{ lineHeight: 1, marginTop: rem(2) }}>
+        {codebaseBranchData.spec.branchName}
+      </Typography>
+      {isDefaultBranch(codebaseData, codebaseBranchData) && (
+        <Chip label="default" className={clsx([classes.labelChip, classes.labelChipBlue])} />
+      )}
+      {codebaseBranchData.spec.release && (
+        <Chip label="release" className={clsx([classes.labelChip, classes.labelChipGreen])} />
+      )}
+      <div style={{ marginLeft: 'auto' }}>
+        <Grid container spacing={1} alignItems={'center'}>
+          <Grid item>
+            <div className={classes.pipelineRunStatus}>
+              <StatusIcon
+                icon={lastPipelineRunIcon}
+                color={lastPipelineRunColor}
+                isRotating={lastPipelineRunIsRotating}
+                width={18}
+                Title={
+                  <>
+                    <Typography variant={'subtitle2'} style={{ fontWeight: 600 }}>
+                      {`Last Build PipelineRun status: ${PipelineRunKubeObject.parseStatus(
+                        pipelineRuns.latestBuildPipelineRun
+                      )}. Reason: ${PipelineRunKubeObject.parseStatusReason(
+                        pipelineRuns.latestBuildPipelineRun
+                      )}`}
+                    </Typography>
+                  </>
+                }
+              />
             </div>
-        </div>
-    );
+          </Grid>
+          {!!EDPComponentsURLS?.sonar && (
+            <Grid item>
+              <ResourceIconLink
+                tooltipTitle={'Open the Quality Gates'}
+                link={sonarLink}
+                icon={ICONS.SONAR}
+              />
+            </Grid>
+          )}
+          {!!codebaseData?.status?.gitWebUrl && (
+            <Grid item>
+              <ResourceIconLink
+                tooltipTitle={'Open the Source Code'}
+                link={codebaseData?.status?.gitWebUrl}
+                icon={ICONS.GIT_BRANCH}
+              />
+            </Grid>
+          )}
+          <Grid item>
+            <Tooltip title={'Trigger build pipeline run'}>
+              <IconButton
+                onClick={onBuildButtonClick}
+                disabled={
+                  PipelineRunKubeObject.parseStatusReason(pipelineRuns.latestBuildPipelineRun) ===
+                    PIPELINE_RUN_REASON.RUNNING ||
+                  codebaseBranchData?.status?.status !== CUSTOM_RESOURCE_STATUSES.CREATED
+                }
+                size="large"
+              >
+                <Icon icon={ICONS.PLAY} />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+
+          <Grid item>
+            <Tooltip title={'Actions'}>
+              <IconButton
+                aria-label={'Actions'}
+                ref={buttonRef}
+                onClick={e => {
+                  e.stopPropagation();
+                  handleOpenResourceActionListMenu(buttonRef.current, codebaseBranchData);
+                }}
+                size="large"
+              >
+                <Icon icon={ICONS.THREE_DOTS} color={'grey'} width="20" />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        </Grid>
+      </div>
+    </div>
+  );
 };

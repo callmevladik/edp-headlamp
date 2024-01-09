@@ -11,36 +11,32 @@
   "scripts": {
     "build": "headlamp-plugin build",
     "format": "headlamp-plugin format",
-    "lint": "headlamp-plugin lint && tsc --noemit",
+    "lint": "headlamp-plugin lint",
     "start": "headlamp-plugin start",
-    "test": "jest",
+    "test": "headlamp-plugin test",
     "test:update": "jest --updateSnapshot",
     "test:coverage": "jest --coverage",
     "storybook": "headlamp-plugin storybook",
-    "storybook-build": "headlamp-plugin storybook-build"
+    "storybook-build": "headlamp-plugin storybook-build",
+    "tsc": "headlamp-plugin tsc"
   },
-  "prettier": "./.prettierrc.js",
+  "prettier": "@kinvolk/eslint-config/prettier-config",
   "eslintConfig": {
     "extends": [
       "@kinvolk",
       "prettier",
       "plugin:jsx-a11y/recommended"
-    ],
-    "rules": {
-      "no-useless-computed-key": "error",
-      "react-hooks/exhaustive-deps": "warn",
-      "react-hooks/rules-of-hooks": "error"
-    }
+    ]
   },
   "dependencies": {
     "@carbon/charts": "0.58.2",
     "@carbon/charts-react": "0.58.2",
     "@hookform/error-message": "^2.0.0",
     "@iconify/react": "^3.2.1",
-    "@kinvolk/headlamp-plugin": "^0.7.4",
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/lab": "^4.0.0-alpha.60",
-    "@material-ui/styles": "^4.11.5",
+    "@kinvolk/headlamp-plugin": "^0.8.0",
+    "@mui/lab": "^5.0.0-alpha.152",
+    "@mui/material": "^5.14.17",
+    "@mui/styles": "^5.14.17",
     "@reduxjs/toolkit": "^1.9.3",
     "carbon-components": "10.58.6",
     "carbon-components-react": "7.59.6",
@@ -49,6 +45,8 @@
     "elkjs": "^0.8.2",
     "humanize-duration": "^3.27.3",
     "lodash": "^4.17.21",
+    "monaco-editor": "^0.25.2",
+    "monaco-editor-webpack-plugin": "^4.2.0",
     "notistack": "^1.0.10",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

@@ -7,29 +7,29 @@ import { GIT_SERVER_FORM_NAMES } from '../../../names';
 import { ManageGitServerDataContext, ManageGitServerValues } from '../../../types';
 
 export const UserName = () => {
-    const {
-        register,
-        control,
-        formState: { errors },
-    } = useReactHookFormContext<ManageGitServerValues>();
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useReactHookFormContext<ManageGitServerValues>();
 
-    const {
-        formData: { mode, gitServerSecret },
-    } = useFormContext<ManageGitServerDataContext>();
+  const {
+    formData: { mode, gitServerSecret },
+  } = useFormContext<ManageGitServerDataContext>();
 
-    const gitServerSecretOwnerReference = gitServerSecret?.metadata?.ownerReferences?.[0].kind;
+  const gitServerSecretOwnerReference = gitServerSecret?.metadata?.ownerReferences?.[0].kind;
 
-    return (
-        <FormTextFieldEditable
-            {...register(GIT_SERVER_FORM_NAMES.gitUser.name, {
-                required: 'Enter the username associated with your Git account.',
-            })}
-            label={'User'}
-            title={'Provide the username associated with your Git account.'}
-            placeholder={'git'}
-            control={control}
-            errors={errors}
-            disabled={mode === FORM_MODES.EDIT && !!gitServerSecretOwnerReference}
-        />
-    );
+  return (
+    <FormTextFieldEditable
+      {...register(GIT_SERVER_FORM_NAMES.gitUser.name, {
+        required: 'Enter the username associated with your Git account.',
+      })}
+      label={'User'}
+      title={'Provide the username associated with your Git account.'}
+      placeholder={'git'}
+      control={control}
+      errors={errors}
+      disabled={mode === FORM_MODES.EDIT && !!gitServerSecretOwnerReference}
+    />
+  );
 };

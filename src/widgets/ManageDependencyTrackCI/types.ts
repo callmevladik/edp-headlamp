@@ -4,17 +4,17 @@ import { ValueOf } from '../../types/global';
 import { DEPENDENCY_TRACK_INTEGRATION_SECRET_FORM_NAMES } from './names';
 
 export interface ManageDependencyTrackIntegrationSecretFormDataContext {
-    dependencyTrackSecret: SecretKubeObjectInterface;
-    mode: ValueOf<typeof FORM_MODES>;
-    ownerReference: string | undefined;
-    isReadOnly: boolean;
-    handleClosePanel?: () => void;
+  dependencyTrackSecret: SecretKubeObjectInterface;
+  mode: ValueOf<typeof FORM_MODES>;
+  ownerReference: string | undefined;
+  isReadOnly: boolean;
+  handleClosePanel?: () => void;
 }
 
 export interface ManageDependencyTrackIntegrationSecretProps {
-    formData: ManageDependencyTrackIntegrationSecretFormDataContext;
+  formData: ManageDependencyTrackIntegrationSecretFormDataContext;
 }
 
 export type ManageDependencyTrackIntegrationSecretFormValues = FormValues<
-    typeof DEPENDENCY_TRACK_INTEGRATION_SECRET_FORM_NAMES
+  typeof DEPENDENCY_TRACK_INTEGRATION_SECRET_FORM_NAMES
 >;

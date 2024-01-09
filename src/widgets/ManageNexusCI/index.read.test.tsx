@@ -11,22 +11,22 @@ import { FORM_MODES } from '../../types/forms';
 import { ManageNexusCI } from './index';
 
 test('renders ManageNexusCI Edit component (read-only)', () => {
-    const ownerReference = NexusCISecretWithOwnerMock.metadata.ownerReferences[0].kind;
+  const ownerReference = NexusCISecretWithOwnerMock.metadata.ownerReferences[0].kind;
 
-    render(
-        <TestWrapper>
-            <ManageNexusCI
-                formData={{
-                    nexusSecret: NexusCISecretWithOwnerMock as unknown as SecretKubeObjectInterface,
-                    ownerReference: ownerReference,
-                    isReadOnly: !!ownerReference,
-                    mode: FORM_MODES.EDIT,
-                    handleClosePanel: jest.fn(),
-                }}
-            />
-        </TestWrapper>
-    );
+  render(
+    <TestWrapper>
+      <ManageNexusCI
+        formData={{
+          nexusSecret: NexusCISecretWithOwnerMock as unknown as SecretKubeObjectInterface,
+          ownerReference: ownerReference,
+          isReadOnly: !!ownerReference,
+          mode: FORM_MODES.EDIT,
+          handleClosePanel: jest.fn(),
+        }}
+      />
+    </TestWrapper>
+  );
 
-    const dialog = screen.getByTestId('form');
-    expect(dialog).toMatchSnapshot();
+  const dialog = screen.getByTestId('form');
+  expect(dialog).toMatchSnapshot();
 });

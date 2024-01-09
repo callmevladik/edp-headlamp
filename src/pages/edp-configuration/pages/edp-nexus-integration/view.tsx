@@ -1,5 +1,5 @@
 import { EmptyContent } from '@kinvolk/headlamp-plugin/lib/CommonComponents';
-import { Grid, Link, Typography } from '@material-ui/core';
+import { Grid, Link, Typography } from '@mui/material';
 import React from 'react';
 import { LoadingWrapper } from '../../../../components/LoadingWrapper';
 import { PageWithSubMenu } from '../../../../components/PageWithSubMenu';
@@ -14,55 +14,55 @@ import { menu } from '../../menu';
 import { NEXUS_INTEGRATION_PAGE_DESCRIPTION } from './constants';
 
 export const PageView = () => {
-    const [nexusSecrets] = SecretKubeObject.useList({
-        namespace: getDefaultNamespace(),
-        labelSelector: `${SECRET_LABEL_SECRET_TYPE}=nexus`,
-    });
+  const [nexusSecrets] = SecretKubeObject.useList({
+    namespace: getDefaultNamespace(),
+    labelSelector: `${SECRET_LABEL_SECRET_TYPE}=nexus`,
+  });
 
-    const nexusSecret = nexusSecrets?.[0]?.jsonData;
+  const nexusSecret = nexusSecrets?.[0]?.jsonData;
 
-    const mode = !!nexusSecret ? FORM_MODES.EDIT : FORM_MODES.CREATE;
-    const ownerReference = nexusSecret?.metadata?.ownerReferences?.[0]?.kind;
-    const isLoading = nexusSecret === null;
+  const mode = !!nexusSecret ? FORM_MODES.EDIT : FORM_MODES.CREATE;
+  const ownerReference = nexusSecret?.metadata?.ownerReferences?.[0]?.kind;
+  const isLoading = nexusSecret === null;
 
-    return (
-        <PageWithSubMenu list={menu}>
-            <PageWrapper containerMaxWidth={'xl'}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Typography variant={'h1'} gutterBottom>
-                            {NEXUS_INTEGRATION_PAGE_DESCRIPTION.label}
-                        </Typography>
-                        <Typography variant={'body1'}>
-                            {NEXUS_INTEGRATION_PAGE_DESCRIPTION.description}{' '}
-                            <Link href={EDP_OPERATOR_GUIDE.NEXUS.url} target={'_blank'}>
-                                <Typography variant={'body2'} component={'span'}>
-                                    Learn more.
-                                </Typography>
-                            </Link>
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <LoadingWrapper isLoading={isLoading}>
-                            <ManageNexusCI
-                                formData={{
-                                    nexusSecret,
-                                    ownerReference,
-                                    isReadOnly: !!ownerReference,
-                                    mode,
-                                }}
-                            />
-                        </LoadingWrapper>
-                    </Grid>
-                    {!nexusSecret && !isLoading && (
-                        <Grid item xs={12}>
-                            <EmptyContent color={'textSecondary'}>
-                                No Nexus integration secrets found
-                            </EmptyContent>
-                        </Grid>
-                    )}
-                </Grid>
-            </PageWrapper>
-        </PageWithSubMenu>
-    );
+  return (
+    <PageWithSubMenu list={menu}>
+      <PageWrapper containerMaxWidth={'xl'}>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography variant={'h1'} gutterBottom>
+              {NEXUS_INTEGRATION_PAGE_DESCRIPTION.label}
+            </Typography>
+            <Typography variant={'body1'}>
+              {NEXUS_INTEGRATION_PAGE_DESCRIPTION.description}{' '}
+              <Link href={EDP_OPERATOR_GUIDE.NEXUS.url} target={'_blank'}>
+                <Typography variant={'body2'} component={'span'}>
+                  Learn more.
+                </Typography>
+              </Link>
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <LoadingWrapper isLoading={isLoading}>
+              <ManageNexusCI
+                formData={{
+                  nexusSecret,
+                  ownerReference,
+                  isReadOnly: !!ownerReference,
+                  mode,
+                }}
+              />
+            </LoadingWrapper>
+          </Grid>
+          {!nexusSecret && !isLoading && (
+            <Grid item xs={12}>
+              <EmptyContent color={'textSecondary'}>
+                No Nexus integration secrets found
+              </EmptyContent>
+            </Grid>
+          )}
+        </Grid>
+      </PageWrapper>
+    </PageWithSubMenu>
+  );
 };

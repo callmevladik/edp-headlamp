@@ -1,5 +1,5 @@
 import { EmptyContent } from '@kinvolk/headlamp-plugin/lib/CommonComponents';
-import { Grid, Link, Typography } from '@material-ui/core';
+import { Grid, Link, Typography } from '@mui/material';
 import React from 'react';
 import { LoadingWrapper } from '../../../../components/LoadingWrapper';
 import { PageWithSubMenu } from '../../../../components/PageWithSubMenu';
@@ -14,55 +14,55 @@ import { menu } from '../../menu';
 import { DEPENDENCY_TRACK_INTEGRATION_PAGE_DESCRIPTION } from './constants';
 
 export const PageView = () => {
-    const [dependencyTrackSecrets] = SecretKubeObject.useList({
-        namespace: getDefaultNamespace(),
-        labelSelector: `${SECRET_LABEL_SECRET_TYPE}=dependency-track`,
-    });
+  const [dependencyTrackSecrets] = SecretKubeObject.useList({
+    namespace: getDefaultNamespace(),
+    labelSelector: `${SECRET_LABEL_SECRET_TYPE}=dependency-track`,
+  });
 
-    const dependencyTrackSecret = dependencyTrackSecrets?.[0]?.jsonData;
+  const dependencyTrackSecret = dependencyTrackSecrets?.[0]?.jsonData;
 
-    const mode = !!dependencyTrackSecret ? FORM_MODES.EDIT : FORM_MODES.CREATE;
-    const ownerReference = dependencyTrackSecret?.metadata?.ownerReferences?.[0]?.kind;
-    const isLoading = dependencyTrackSecrets === null;
+  const mode = !!dependencyTrackSecret ? FORM_MODES.EDIT : FORM_MODES.CREATE;
+  const ownerReference = dependencyTrackSecret?.metadata?.ownerReferences?.[0]?.kind;
+  const isLoading = dependencyTrackSecrets === null;
 
-    return (
-        <PageWithSubMenu list={menu}>
-            <PageWrapper containerMaxWidth={'xl'}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Typography variant={'h1'} gutterBottom>
-                            {DEPENDENCY_TRACK_INTEGRATION_PAGE_DESCRIPTION.label}
-                        </Typography>
-                        <Typography variant={'body1'}>
-                            {DEPENDENCY_TRACK_INTEGRATION_PAGE_DESCRIPTION.description}{' '}
-                            <Link href={EDP_OPERATOR_GUIDE.DEPENDENCY_TRACK.url} target={'_blank'}>
-                                <Typography variant={'body2'} component={'span'}>
-                                    Learn more.
-                                </Typography>
-                            </Link>
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <LoadingWrapper isLoading={isLoading}>
-                            <ManageDependencyTrackCI
-                                formData={{
-                                    dependencyTrackSecret,
-                                    ownerReference,
-                                    isReadOnly: !!ownerReference,
-                                    mode,
-                                }}
-                            />
-                        </LoadingWrapper>
-                    </Grid>
-                    {!dependencyTrackSecret && !isLoading && (
-                        <Grid item xs={12}>
-                            <EmptyContent color={'textSecondary'}>
-                                No DependencyTrack integration secrets found
-                            </EmptyContent>
-                        </Grid>
-                    )}
-                </Grid>
-            </PageWrapper>
-        </PageWithSubMenu>
-    );
+  return (
+    <PageWithSubMenu list={menu}>
+      <PageWrapper containerMaxWidth={'xl'}>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography variant={'h1'} gutterBottom>
+              {DEPENDENCY_TRACK_INTEGRATION_PAGE_DESCRIPTION.label}
+            </Typography>
+            <Typography variant={'body1'}>
+              {DEPENDENCY_TRACK_INTEGRATION_PAGE_DESCRIPTION.description}{' '}
+              <Link href={EDP_OPERATOR_GUIDE.DEPENDENCY_TRACK.url} target={'_blank'}>
+                <Typography variant={'body2'} component={'span'}>
+                  Learn more.
+                </Typography>
+              </Link>
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <LoadingWrapper isLoading={isLoading}>
+              <ManageDependencyTrackCI
+                formData={{
+                  dependencyTrackSecret,
+                  ownerReference,
+                  isReadOnly: !!ownerReference,
+                  mode,
+                }}
+              />
+            </LoadingWrapper>
+          </Grid>
+          {!dependencyTrackSecret && !isLoading && (
+            <Grid item xs={12}>
+              <EmptyContent color={'textSecondary'}>
+                No DependencyTrack integration secrets found
+              </EmptyContent>
+            </Grid>
+          )}
+        </Grid>
+      </PageWrapper>
+    </PageWithSubMenu>
+  );
 };

@@ -11,20 +11,20 @@ import { FORM_MODES } from '../../types/forms';
 import { ManageNexusCI } from './index';
 
 test('renders ManageNexusCI Edit component', () => {
-    render(
-        <TestWrapper>
-            <ManageNexusCI
-                formData={{
-                    nexusSecret: NexusCISecretMock as unknown as SecretKubeObjectInterface,
-                    ownerReference: undefined,
-                    isReadOnly: false,
-                    mode: FORM_MODES.EDIT,
-                    handleClosePanel: jest.fn(),
-                }}
-            />
-        </TestWrapper>
-    );
+  render(
+    <TestWrapper>
+      <ManageNexusCI
+        formData={{
+          nexusSecret: NexusCISecretMock as unknown as SecretKubeObjectInterface,
+          ownerReference: undefined,
+          isReadOnly: false,
+          mode: FORM_MODES.EDIT,
+          handleClosePanel: jest.fn(),
+        }}
+      />
+    </TestWrapper>
+  );
 
-    const dialog = screen.getByTestId('form');
-    expect(dialog).toMatchSnapshot();
+  const dialog = screen.getByTestId('form');
+  expect(dialog).toMatchSnapshot();
 });

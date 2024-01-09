@@ -11,22 +11,22 @@ import { FORM_MODES } from '../../types/forms';
 import { ManageSonarCI } from './index';
 
 test('renders ManageSonarCI Edit component (read-only)', () => {
-    const ownerReference = SonarCISecretWithOwnerMock.metadata.ownerReferences[0].kind;
+  const ownerReference = SonarCISecretWithOwnerMock.metadata.ownerReferences[0].kind;
 
-    render(
-        <TestWrapper>
-            <ManageSonarCI
-                formData={{
-                    sonarSecret: SonarCISecretWithOwnerMock as unknown as SecretKubeObjectInterface,
-                    ownerReference: ownerReference,
-                    isReadOnly: !!ownerReference,
-                    mode: FORM_MODES.EDIT,
-                    handleClosePanel: jest.fn(),
-                }}
-            />
-        </TestWrapper>
-    );
+  render(
+    <TestWrapper>
+      <ManageSonarCI
+        formData={{
+          sonarSecret: SonarCISecretWithOwnerMock as unknown as SecretKubeObjectInterface,
+          ownerReference: ownerReference,
+          isReadOnly: !!ownerReference,
+          mode: FORM_MODES.EDIT,
+          handleClosePanel: jest.fn(),
+        }}
+      />
+    </TestWrapper>
+  );
 
-    const dialog = screen.getByTestId('form');
-    expect(dialog).toMatchSnapshot();
+  const dialog = screen.getByTestId('form');
+  expect(dialog).toMatchSnapshot();
 });

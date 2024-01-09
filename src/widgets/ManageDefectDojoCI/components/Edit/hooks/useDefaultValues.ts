@@ -4,20 +4,18 @@ import { DEFECT_DOJO_INTEGRATION_SECRET_FORM_NAMES } from '../../../names';
 import { ManageDefectDojoIntegrationSecretFormDataContext } from '../../../types';
 
 export const useDefaultValues = ({
-    formData,
+  formData,
 }: {
-    formData: ManageDefectDojoIntegrationSecretFormDataContext;
+  formData: ManageDefectDojoIntegrationSecretFormDataContext;
 }) => {
-    const { defectDojoSecret } = formData;
+  const { defectDojoSecret } = formData;
 
-    return React.useMemo(() => {
-        return {
-            [DEFECT_DOJO_INTEGRATION_SECRET_FORM_NAMES.token.name]: safeDecode(
-                defectDojoSecret?.data?.token
-            ),
-            [DEFECT_DOJO_INTEGRATION_SECRET_FORM_NAMES.url.name]: safeDecode(
-                defectDojoSecret?.data?.url
-            ),
-        };
-    }, [defectDojoSecret]);
+  return React.useMemo(() => {
+    return {
+      [DEFECT_DOJO_INTEGRATION_SECRET_FORM_NAMES.token.name]: safeDecode(
+        defectDojoSecret?.data?.token
+      ),
+      [DEFECT_DOJO_INTEGRATION_SECRET_FORM_NAMES.url.name]: safeDecode(defectDojoSecret?.data?.url),
+    };
+  }, [defectDojoSecret]);
 };

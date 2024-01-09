@@ -7,27 +7,27 @@ import { NEXUS_INTEGRATION_SECRET_FORM_NAMES } from '../../../names';
 import { ManageNexusIntegrationSecretFormDataContext } from '../../../types';
 
 export const Password = () => {
-    const {
-        register,
-        control,
-        formState: { errors },
-    } = useReactHookFormContext();
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useReactHookFormContext();
 
-    const {
-        formData: { mode, isReadOnly },
-    } = useFormContext<ManageNexusIntegrationSecretFormDataContext>();
+  const {
+    formData: { mode, isReadOnly },
+  } = useFormContext<ManageNexusIntegrationSecretFormDataContext>();
 
-    return (
-        <FormTextFieldPassword
-            {...register(NEXUS_INTEGRATION_SECRET_FORM_NAMES.password.name, {
-                required: 'Provide the password associated with your Nexus repository username.',
-            })}
-            label={`Password`}
-            title={'Enter the password associated with your Nexus repository username.'}
-            placeholder={'Enter password'}
-            control={control}
-            errors={errors}
-            disabled={mode === FORM_MODES.EDIT && isReadOnly}
-        />
-    );
+  return (
+    <FormTextFieldPassword
+      {...register(NEXUS_INTEGRATION_SECRET_FORM_NAMES.password.name, {
+        required: 'Provide the password associated with your Nexus repository username.',
+      })}
+      label={`Password`}
+      title={'Enter the password associated with your Nexus repository username.'}
+      placeholder={'Enter password'}
+      control={control}
+      errors={errors}
+      disabled={mode === FORM_MODES.EDIT && isReadOnly}
+    />
+  );
 };

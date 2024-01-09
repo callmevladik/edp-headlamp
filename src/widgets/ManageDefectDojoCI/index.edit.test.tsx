@@ -11,21 +11,20 @@ import { FORM_MODES } from '../../types/forms';
 import { ManageDefectDojoCI } from './index';
 
 test('renders ManageDefectDojoCI Edit component', () => {
-    render(
-        <TestWrapper>
-            <ManageDefectDojoCI
-                formData={{
-                    defectDojoSecret:
-                        DefectDojoCISecretMock as unknown as SecretKubeObjectInterface,
-                    ownerReference: undefined,
-                    isReadOnly: false,
-                    mode: FORM_MODES.EDIT,
-                    handleClosePanel: jest.fn(),
-                }}
-            />
-        </TestWrapper>
-    );
+  render(
+    <TestWrapper>
+      <ManageDefectDojoCI
+        formData={{
+          defectDojoSecret: DefectDojoCISecretMock as unknown as SecretKubeObjectInterface,
+          ownerReference: undefined,
+          isReadOnly: false,
+          mode: FORM_MODES.EDIT,
+          handleClosePanel: jest.fn(),
+        }}
+      />
+    </TestWrapper>
+  );
 
-    const dialog = screen.getByTestId('form');
-    expect(dialog).toMatchSnapshot();
+  const dialog = screen.getByTestId('form');
+  expect(dialog).toMatchSnapshot();
 });

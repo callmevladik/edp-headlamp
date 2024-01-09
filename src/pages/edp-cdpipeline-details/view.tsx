@@ -1,5 +1,5 @@
 import { Router } from '@kinvolk/headlamp-plugin/lib';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { PageWrapper } from '../../components/PageWrapper';
@@ -19,67 +19,64 @@ import { useDynamicDataContext } from './providers/DynamicData/hooks';
 import { EDPCDPipelineRouteParams } from './types';
 
 export const PageView = () => {
-    const { name, namespace } = useParams<EDPCDPipelineRouteParams>();
+  const { name, namespace } = useParams<EDPCDPipelineRouteParams>();
 
-    const { CDPipeline, stages } = useDynamicDataContext();
-    const { data: EDPComponentsURLS } = useEDPComponentsURLsQuery(namespace);
+  const { CDPipeline, stages } = useDynamicDataContext();
+  const { data: EDPComponentsURLS } = useEDPComponentsURLsQuery(namespace);
 
-    return (
-        <PageWrapper
-            breadcrumbs={[
-                {
-                    label: 'Environments',
-                    url: {
-                        pathname: routeEDPCDPipelineList.path,
-                    },
-                },
-                {
-                    label: name,
-                },
-            ]}
-            headerSlot={
-                <Grid container>
-                    <Grid item>
-                        <ResourceIconLink
-                            icon={ICONS.ARGOCD}
-                            tooltipTitle={'Open in ArgoCD'}
-                            link={LinkCreationService.argocd.createPipelineLink(
-                                EDPComponentsURLS?.argocd,
-                                name
-                            )}
-                        />
-                    </Grid>
-                    {!!CDPipeline && (
-                        <>
-                            <Grid item>
-                                <CDPipelineMetadataTable CDPipelineData={CDPipeline} />
-                            </Grid>
-                            <Grid item>
-                                <CDPipelineActions
-                                    CDPipeline={CDPipeline}
-                                    backRoute={Router.createRouteURL(routeEDPCDPipelineList.path)}
-                                />
-                            </Grid>
-                        </>
-                    )}
-                </Grid>
-            }
-        >
-            <Section title={name} description={'Inspect the Environment and operate stages.'}>
-                {!!CDPipeline && (
-                    <Grid container spacing={8}>
-                        <Grid item xs={12}>
-                            <CDPipelineApplicationsTable />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <ResourceActionListContextProvider>
-                                <StageList />
-                                <StageActionsMenu stages={stages} CDPipelineData={CDPipeline} />
-                            </ResourceActionListContextProvider>
-                        </Grid>
-                    </Grid>
-                )}
-            </Section>
-        </PageWrapper>
-    );
+  return (
+    <PageWrapper
+      breadcrumbs={[
+        {
+          label: 'Environments',
+          url: {
+            pathname: routeEDPCDPipelineList.path,
+          },
+        },
+        {
+          label: name,
+        },
+      ]}
+      headerSlot={
+        <Grid container>
+          <Grid item>
+            <ResourceIconLink
+              icon={ICONS.ARGOCD}
+              tooltipTitle={'Open in ArgoCD'}
+              link={LinkCreationService.argocd.createPipelineLink(EDPComponentsURLS?.argocd, name)}
+            />
+          </Grid>
+          {!!CDPipeline && (
+            <>
+              <Grid item>
+                <CDPipelineMetadataTable CDPipelineData={CDPipeline} />
+              </Grid>
+              <Grid item>
+                <CDPipelineActions
+                  CDPipeline={CDPipeline}
+                  backRoute={Router.createRouteURL(routeEDPCDPipelineList.path)}
+                />
+              </Grid>
+            </>
+          )}
+        </Grid>
+      }
+    >
+      <Section title={name} description={'Inspect the Environment and operate stages.'}>
+        {!!CDPipeline && (
+          <Grid container spacing={8}>
+            <Grid item xs={12}>
+              <CDPipelineApplicationsTable />
+            </Grid>
+            <Grid item xs={12}>
+              <ResourceActionListContextProvider>
+                <StageList />
+                <StageActionsMenu stages={stages} CDPipelineData={CDPipeline} />
+              </ResourceActionListContextProvider>
+            </Grid>
+          </Grid>
+        )}
+      </Section>
+    </PageWrapper>
+  );
 };

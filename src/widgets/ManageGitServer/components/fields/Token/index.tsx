@@ -7,26 +7,26 @@ import { GIT_SERVER_FORM_NAMES } from '../../../names';
 import { ManageGitServerDataContext, ManageGitServerValues } from '../../../types';
 
 export const Token = () => {
-    const {
-        register,
-        control,
-        formState: { errors },
-    } = useReactHookFormContext<ManageGitServerValues>();
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useReactHookFormContext<ManageGitServerValues>();
 
-    const {
-        formData: { mode, gitServerSecret },
-    } = useFormContext<ManageGitServerDataContext>();
-    const gitServerSecretOwnerReference = gitServerSecret?.metadata?.ownerReferences?.[0].kind;
+  const {
+    formData: { mode, gitServerSecret },
+  } = useFormContext<ManageGitServerDataContext>();
+  const gitServerSecretOwnerReference = gitServerSecret?.metadata?.ownerReferences?.[0].kind;
 
-    return (
-        <FormTextFieldPassword
-            {...register(GIT_SERVER_FORM_NAMES.token.name, {
-                required: 'Enter your access token',
-            })}
-            label={'Access token'}
-            control={control}
-            errors={errors}
-            disabled={mode === FORM_MODES.EDIT && !!gitServerSecretOwnerReference}
-        />
-    );
+  return (
+    <FormTextFieldPassword
+      {...register(GIT_SERVER_FORM_NAMES.token.name, {
+        required: 'Enter your access token',
+      })}
+      label={'Access token'}
+      control={control}
+      errors={errors}
+      disabled={mode === FORM_MODES.EDIT && !!gitServerSecretOwnerReference}
+    />
+  );
 };

@@ -4,21 +4,17 @@ import { NEXUS_INTEGRATION_SECRET_FORM_NAMES } from '../../../names';
 import { ManageNexusIntegrationSecretFormDataContext } from '../../../types';
 
 export const useDefaultValues = ({
-    formData,
+  formData,
 }: {
-    formData: ManageNexusIntegrationSecretFormDataContext;
+  formData: ManageNexusIntegrationSecretFormDataContext;
 }) => {
-    const { nexusSecret } = formData;
+  const { nexusSecret } = formData;
 
-    return React.useMemo(() => {
-        return {
-            [NEXUS_INTEGRATION_SECRET_FORM_NAMES.username.name]: safeDecode(
-                nexusSecret?.data?.username
-            ),
-            [NEXUS_INTEGRATION_SECRET_FORM_NAMES.password.name]: safeDecode(
-                nexusSecret?.data?.password
-            ),
-            [NEXUS_INTEGRATION_SECRET_FORM_NAMES.url.name]: safeDecode(nexusSecret?.data?.url),
-        };
-    }, [nexusSecret]);
+  return React.useMemo(() => {
+    return {
+      [NEXUS_INTEGRATION_SECRET_FORM_NAMES.username.name]: safeDecode(nexusSecret?.data?.username),
+      [NEXUS_INTEGRATION_SECRET_FORM_NAMES.password.name]: safeDecode(nexusSecret?.data?.password),
+      [NEXUS_INTEGRATION_SECRET_FORM_NAMES.url.name]: safeDecode(nexusSecret?.data?.url),
+    };
+  }, [nexusSecret]);
 };
